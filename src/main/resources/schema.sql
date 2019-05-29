@@ -67,24 +67,6 @@ CREATE TABLE `course` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `coursexcontributor`
---
-
-DROP TABLE IF EXISTS `coursexcontributor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `coursexcontributor` (
-  `contributor_id` int(11) NOT NULL,
-  `course_id` int(11) NOT NULL,
-  `key_contributor` bit(1) DEFAULT b'0',
-  PRIMARY KEY (`contributor_id`,`course_id`),
-  KEY `course_id` (`course_id`),
-  CONSTRAINT `coursexcontributor_ibfk_1` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
-  CONSTRAINT `coursexcontributor_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `repository`
 --
 
@@ -101,6 +83,24 @@ CREATE TABLE `repository` (
   PRIMARY KEY (`id`),
   KEY `repository_course_fk` (`course_id`),
   CONSTRAINT `repository_course_fk` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `repositoryxcontributor`
+--
+
+DROP TABLE IF EXISTS `repositoryxcontributor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `repositoryxcontributor` (
+  `contributor_id` int(11) NOT NULL,
+  `repository_id` int(11) NOT NULL,
+  `key_contributor` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`contributor_id`,`repository_id`),
+  KEY `course_id` (`repository_id`),
+  CONSTRAINT `repositoryxcontributor_ibfk_1` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
+  CONSTRAINT `repositoryxcontributor_ibfk_2` FOREIGN KEY (`repository_id`) REFERENCES `repository` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -132,4 +132,4 @@ CREATE TABLE `sprint` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-29  0:56:06
+-- Dump completed on 2019-05-29 21:45:32
