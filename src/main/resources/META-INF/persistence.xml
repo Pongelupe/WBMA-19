@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="bikeit">
+	<persistence-unit name="wbma">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<properties>
 			<!-- Dados da conexão com o banco -->
@@ -11,12 +11,13 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
 			<property name="hibernate.hbm2ddl.auto" value="none" />
-			<property name="hibernate.connection.driver_class"
-				value="org.postgresql.Driver" />
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.jdbc.Driver" />
 			<property name="hibernate.connection.url"
-				value="jdbc:postgresql://localhost:5432/wbma" />
-			<property name="hibernate.connection.username"
-				value="postgres" />
+				value="jdbc:mysql://localhost:1234/wbma" />
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.connection.username" value="root" />
 			<property name="hibernate.connection.password" value="root" />
 		</properties>
 	</persistence-unit>

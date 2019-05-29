@@ -60,11 +60,8 @@ DROP TABLE IF EXISTS `course`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `course` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name_tool` varchar(60) DEFAULT NULL,
   `name` varchar(60) DEFAULT NULL,
-  `url` varchar(120) DEFAULT NULL,
-  `truck_factor` int(11) DEFAULT NULL,
-  `course_id` int(11) NOT NULL,
+  `semester` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -101,7 +98,9 @@ CREATE TABLE `repository` (
   `url` varchar(120) DEFAULT NULL,
   `truck_factor` int(11) DEFAULT NULL,
   `course_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `repository_course_fk` (`course_id`),
+  CONSTRAINT `repository_course_fk` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -133,4 +132,4 @@ CREATE TABLE `sprint` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-28  0:11:54
+-- Dump completed on 2019-05-29  0:56:06
