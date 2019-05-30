@@ -7,15 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @NoArgsConstructor
+@Table(name = "course")
 public class Course implements BaseEntity<Integer> {
 
 	@Id
@@ -24,9 +24,25 @@ public class Course implements BaseEntity<Integer> {
 
 	@Column(name = "name", length = 60)
 	private String name;
-	
+
 	@Column(name = "semester")
 	@Temporal(value = TemporalType.DATE)
 	private Date semester;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

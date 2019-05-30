@@ -12,12 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Data
 public class Sprint implements BaseEntity<Integer> {
 
 	@Id
@@ -41,5 +39,53 @@ public class Sprint implements BaseEntity<Integer> {
 
 	@Column(name = "course_id", insertable = false, updatable = false)
 	private int courseId;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Date getInitialDate() {
+		return initialDate;
+	}
+
+	public void setInitialDate(Date initialDate) {
+		this.initialDate = initialDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }
