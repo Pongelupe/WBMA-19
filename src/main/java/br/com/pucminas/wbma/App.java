@@ -1,6 +1,7 @@
 package br.com.pucminas.wbma;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ import br.com.pucminas.wbma.dao.RepositoryDAO;
 import br.com.pucminas.wbma.dao.RepositoryXContributorDAO;
 import br.com.pucminas.wbma.entity.Commit;
 import br.com.pucminas.wbma.entity.Contributor;
+import br.com.pucminas.wbma.entity.Repository;
 import br.com.pucminas.wbma.entity.RepositoryXContributor;
 import br.com.pucminas.wbma.entity.RepositoryXContributorId;
 import br.com.pucminas.wbma.enums.Semester;
@@ -69,7 +71,9 @@ public class App {
 
 				// Persists contributors and repositoryxcontributors
 				var contributors = commits.stream().map(CommitDTO::getAuthor).map(PersonIdent::getName)
-						.collect(Collectors.toSet()).stream().map(Contributor::new)
+						.collect(Collectors.toSet()).stream()
+						.map(name -> prepareNameContributor(name, repo))
+						.map(Contributor::new)
 						.map(contributorDAO::persistIfNotExists).map(contributor -> {
 
 							contributor.setId(Optional.ofNullable(contributor.getId()).orElseGet(() -> contributorDAO
@@ -95,9 +99,15 @@ public class App {
 
 			} catch (GitAPIException e) {
 				// Do nothing
-			} finally {
 			}
 		});
+	}
+
+	private static String prepareNameContributor(String name, Repository repo) {
+		String formattedUnknown = name.concat("- ").concat(repo.getName())
+				.concat(new Timestamp(new Date().getTime()).toString());
+		
+		return name.equals("Unknown") ? formattedUnknown : name;
 	}
 
 }
