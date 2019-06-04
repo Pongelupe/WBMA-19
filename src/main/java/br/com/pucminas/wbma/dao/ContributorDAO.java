@@ -34,7 +34,7 @@ public class ContributorDAO extends BaseDAO<Contributor> {
 		Root<Contributor> from = cq.from(Contributor.class);
 
 		cq.select(getCb().literal(1)).where(getCb().or(getCb().equal(from.get(Contributor_.id), entity.getId()),
-				getCb().equal(getCb().lower(from.get(Contributor_.username)), entity.getUsername())));
+				getCb().equal(from.get(Contributor_.username), entity.getUsername())));
 
 		return !em.createQuery(cq).getResultList().isEmpty();
 	}

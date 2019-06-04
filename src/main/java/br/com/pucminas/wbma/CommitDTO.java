@@ -10,5 +10,5 @@ public class CommitDTO {
 	
 	private Commit commit;
 	private PersonIdent author;
-
+	
 }

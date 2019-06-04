@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.eclipse.jgit.api.Git;
 
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -41,6 +44,9 @@ public class Repository implements BaseEntity<Integer> {
 
 	@Column(name = "course_id", insertable = false, updatable = false)
 	private Integer courseId;
+
+	@Transient
+	private Git git;
 
 	public Integer getId() {
 		return id;
@@ -96,6 +102,14 @@ public class Repository implements BaseEntity<Integer> {
 
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+
+	public Git getGit() {
+		return git;
+	}
+
+	public void setGit(Git git) {
+		this.git = git;
 	}
 
 }
