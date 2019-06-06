@@ -1,5 +1,6 @@
 package br.com.pucminas.wbma;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -11,18 +12,25 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToLongFunction;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 
 import br.com.pucminas.wbma.dao.CommitDAO;
 import br.com.pucminas.wbma.dao.ContributorDAO;
 import br.com.pucminas.wbma.dao.RepositoryDAO;
 import br.com.pucminas.wbma.dao.RepositoryXContributorDAO;
+import br.com.pucminas.wbma.dtos.CommitDTO;
+import br.com.pucminas.wbma.dtos.DiffDTO;
 import br.com.pucminas.wbma.entity.Commit;
 import br.com.pucminas.wbma.entity.Contributor;
 import br.com.pucminas.wbma.entity.RepositoryXContributor;
@@ -73,14 +81,18 @@ public class App {
 
 				var git = repo.getGit();
 
+				var formatter = new DiffFormatter(new ByteArrayOutputStream());
+				formatter.setRepository(git.getRepository());
+
 				Iterable<RevCommit> log = git.log().call();
 				List<CommitDTO> commits = new ArrayList<>();
 				for (RevCommit entry : log) {
+					DiffDTO diff = prepareDiffFromCommit(formatter, entry);
+
 					PersonIdent author = entry.getAuthorIdent();
 					Date commitedAt = Date.from(Instant.ofEpochSecond(entry.getCommitTime()));
-
 					commits.add(new CommitDTO(
-							new Commit(commitedAt, entry.getCommitterIdent().getName(), entry.getFullMessage().trim()),
+							new Commit(commitedAt, entry.getCommitterIdent().getName(), entry.getFullMessage().trim(), diff),
 							author));
 				}
 
@@ -117,6 +129,24 @@ public class App {
 				// Do nothing
 			}
 		});
+	}
+
+	private static DiffDTO prepareDiffFromCommit(DiffFormatter formatter, RevCommit entry) {
+		try {
+			final RevTree a = entry.getParentCount() > 0 ? entry.getParent(0).getTree() : null;
+			final RevTree b = entry.getTree();
+
+			List<DiffEntry> diffs;
+			diffs = formatter.scan(a, b);
+
+			ToLongFunction<ChangeType> changeTypeCounter = changeType -> diffs.stream()
+					.filter(d -> d.getChangeType().equals(changeType)).count();
+
+			return new DiffDTO(diffs.size(), changeTypeCounter.applyAsLong(ChangeType.ADD),
+					changeTypeCounter.applyAsLong(ChangeType.DELETE), changeTypeCounter.applyAsLong(ChangeType.MODIFY));
+		} catch (IOException e) {
+			return new DiffDTO(0, 0, 0, 0);
+		}
 	}
 
 	private static String prepareNameContributor(CommitDTO commit) {

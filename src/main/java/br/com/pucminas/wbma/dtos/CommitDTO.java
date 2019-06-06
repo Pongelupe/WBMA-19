@@ -1,4 +1,4 @@
-package br.com.pucminas.wbma;
+package br.com.pucminas.wbma.dtos;
 
 import org.eclipse.jgit.lib.PersonIdent;
 
@@ -10,5 +10,4 @@ public class CommitDTO {
 	
 	private Commit commit;
 	private PersonIdent author;
-	
 }

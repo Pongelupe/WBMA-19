@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 
+import br.com.pucminas.wbma.dtos.DiffDTO;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -50,11 +51,29 @@ public class Commit implements BaseEntity<Integer> {
 
 	@Column(name = "contributor_id", insertable = false, updatable = false)
 	private Integer contributorId;
+	
+	@Column(name = "files_altered")
+	private Integer filesAltered;
 
-	public Commit(Date commitedAt, String author, String message) {
+	@Column(name = "insertions")
+	private Integer insertions;
+
+	@Column(name = "deletions")
+	private Integer deletions;
+
+	@Column(name = "modifications")
+	private Integer modifications;
+	
+
+	public Commit(Date commitedAt, String author, String message, DiffDTO diff) {
 		this.commitedAt = commitedAt;
 		this.author = author;
 		this.message = message;
+		
+		this.insertions = (int) diff.getInsertions();
+		this.deletions = (int) diff.getDeletions();
+		this.modifications = (int) diff.getModifications();
+		this.filesAltered = (int) diff.getFilesAltered();
 	}
 
 	public Integer getId() {
