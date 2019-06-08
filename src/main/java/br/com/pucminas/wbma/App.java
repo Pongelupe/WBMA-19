@@ -58,8 +58,9 @@ public class App {
 		var contributorDAO = new ContributorDAO();
 		var repositoryXContributorDAO = new RepositoryXContributorDAO();
 		var commitDAO = new CommitDAO();
-		var repositories = new RepositoryDAO()
-				.findAllBySemester(Semester.getSemesterByOrder(order).orElseThrow().getDateSemester());
+		var repositories = order == -1 ? new RepositoryDAO().findAll()
+				: new RepositoryDAO()
+						.findAllBySemester(Semester.getSemesterByOrder(order).orElseThrow().getDateSemester());
 
 		repositories.parallelStream().map(repo -> {
 			File folder = new File(REPOSITORIES_FOLDER + repo.getName());
@@ -91,9 +92,8 @@ public class App {
 
 					PersonIdent author = entry.getAuthorIdent();
 					Date commitedAt = Date.from(Instant.ofEpochSecond(entry.getCommitTime()));
-					commits.add(new CommitDTO(
-							new Commit(commitedAt, entry.getCommitterIdent().getName(), entry.getFullMessage().trim(), diff),
-							author));
+					commits.add(new CommitDTO(new Commit(commitedAt, entry.getCommitterIdent().getName(),
+							entry.getFullMessage().trim(), diff), author));
 				}
 
 				// Persists contributors and repositoryxcontributors

@@ -135,6 +135,15 @@ public class BaseDAO<T extends BaseEntity<?>> {
 		return target;
 	}
 
+	public List<T> findAll() {
+		CriteriaQuery<T> cq = getCb().createQuery(clazz);
+		Root<T> from = cq.from(clazz);
+
+		cq.select(from);
+
+		return em.createQuery(cq).getResultList();
+	}
+
 	/**
 	 * 
 	 * It checks if the given Entity exists by its id
